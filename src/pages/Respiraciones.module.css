@@ -1,0 +1,151 @@
+/* Respiraciones.module.css */
+
+:root {
+  --highlight: #2EE5B6;
+  --tag-bg: #f0f0f0;
+  --tag-text: #555;
+  --card-radius: 1.2rem;
+  --card-shadow: 0px 6px 14px rgba(0, 0, 0, 0.05);
+}
+
+.pageContainer {
+  display: flex;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.sidebar {
+  width: 250px;
+  background: #fff;
+  padding: 2rem 1rem;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.logo {
+  max-width: 150px;
+  margin: 0 auto 2rem auto;
+  display: block;
+}
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.navItem {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #2d3142;
+  cursor: pointer;
+  padding: 0.4rem 1rem;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+  text-align: left;
+  border: none;
+  background: none;
+}
+
+.navItem:hover,
+.navItem.active {
+  background-color: #e8fdf7;
+  color: var(--highlight);
+}
+
+.mainContent {
+  margin-left: 250px;
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.walletContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d3142;
+  margin-bottom: 1rem;
+}
+
+.categoryFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.filterButton {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-bottom: 2rem;
+}
+
+.filterButton:hover,
+.filterButton.active {
+  background-color: var(--highlight);
+  color: white;
+  border-color: var(--highlight);
+}
+
+.cardGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.card {
+  background-color: #fff;
+  width: 220px;
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-top-left-radius: var(--card-radius);
+  border-top-right-radius: var(--card-radius);
+}
+
+.cardTitle {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #2d3142;
+  padding: 0.6rem 1rem 0.2rem 1rem;
+}
+
+.cardCategory {
+  background-color: var(--tag-bg);
+  color: var(--tag-text);
+  font-size: 0.8rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 1rem;
+  margin: 0 1rem 1rem 1rem;
+  display: inline-block;
+}
+

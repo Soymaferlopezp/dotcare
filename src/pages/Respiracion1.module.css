@@ -1,0 +1,108 @@
+:root {
+  --highlight: #2EE5B6;
+  --background: #f5f5f5;
+  --text-dark: #2d3142;
+  --text-light: #555;
+}
+
+.page {
+  display: flex;
+  height: 100vh;
+  background-color: var(--background);
+}
+
+.sidebar {
+  width: 250px;
+  background: #fff;
+  padding: 2rem 1rem;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.logo {
+  max-width: 150px;
+  margin: 0 auto 2rem auto;
+  display: block;
+}
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.navItem {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-dark);
+  cursor: pointer;
+  padding: 0.4rem 1rem;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+  text-align: left;
+  border: none;
+  background: none;
+}
+
+.navItem:hover,
+.navItem.active {
+  background-color: #e8fdf7;
+  color: var(--highlight);
+}
+
+.mainContent {
+  margin-left: 250px;
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.walletContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+}
+
+.video {
+  width: 100%;
+  max-width: 720px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.finishButton {
+  background-color: #2ee5b6;
+  color: black;
+  font-weight: 600;
+  padding: 0.8rem 1.6rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  margin-top: 2rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.finishButton:hover {
+  background-color: #26c6a2;
+}

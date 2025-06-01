@@ -1,0 +1,16 @@
+.connectButton {
+  background-color: #BCE6B0;
+  color: #000000;
+  font-family: var(--font-title);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1.5rem;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.connectButton:hover {
+  background-color: #2EE5B6;
+}

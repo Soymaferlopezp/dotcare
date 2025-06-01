@@ -1,0 +1,208 @@
+:root {
+  --sidebar-width: 250px;
+  --background: #f5f5f5;
+  --text: #2d3142;
+  --highlight: #2EE5B6;
+  --light-green: #BCE6B0;
+  --hover: #e8fdf7;
+}
+
+.dashboard {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--background);
+  font-family: 'Manrope', sans-serif;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: #ffffff;
+  padding: 2rem 1rem;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.logo {
+  max-width: 150px;
+  margin: 0 auto 2rem auto;
+  display: block;
+}
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.navItem {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+  text-align: left;
+  border: none;
+  background: none;
+}
+
+.navItem:hover,
+.navItem.active {
+  background-color: var(--hover);
+  color: var(--highlight);
+}
+
+.walletButton {
+  margin-top: 2rem;
+}
+
+.mainContent {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.profileBox {
+  background-color: #e7e7e7;
+  padding: 2rem;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.profileImage {
+  width: 70px;
+  height: auto;
+}
+
+.profileTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.profileDescription {
+  font-size: 1rem;
+  color: #333;
+}
+
+.cardGrid {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.cardBox {
+  flex: 1;
+  background-color: #e7e7e7;
+  border-radius: 20px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+}
+
+.cardTitle {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.cardCount {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--highlight);
+}
+
+.streakBox, .journalBox, .achievementsBox {
+  background-color: #ffffff;
+  border-radius: 30px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.streakTitle, .journalTitle, .achievementsTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.streakDays, .journalRow {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.dayCircle, .journalCircle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: var(--text);
+  border: 1px solid #ccc;
+}
+
+.streakButton, .viewAllButton {
+  background-color: var(--light-green);
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #000;
+}
+
+.achievementsGrid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.badgeItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.badgeImage {
+  width: 70px;
+  height: auto;
+  opacity: 0.6;
+}
+
+.badgeLabel {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.walletContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
