@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { CONTRACT_ABI } from "../constants/contractAbi";
 import { CONTRACT_ADDRESS } from "../constants/contractAddress";
+import styles from "../pages/Respiracion1.module.css";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -58,9 +59,14 @@ const MintButton = () => {
   };
 
   return (
-    <button onClick={handleMint} disabled={isMinting} className="finishButton">
-      {isMinting ? "Minting..." : "Terminé mi sesión"}
-    </button>
+<button
+  onClick={handleMint}
+  disabled={isMinting}
+  className={styles.finishButton}
+>
+  {isMinting ? "Minting..." : "Terminé mi sesión"}
+</button>
+
   );
 };
 
