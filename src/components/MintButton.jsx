@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { CONTRACT_ABI } from "../constants/contractAbi";
 import { CONTRACT_ADDRESS } from "../constants/contractAddress";
-import styles from "../pages/Respiracion1.module.css";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -62,7 +61,19 @@ const MintButton = () => {
 <button
   onClick={handleMint}
   disabled={isMinting}
-  className={styles.finishButton}
+  style={{
+    backgroundColor: "#6f4aad",
+    color: "white",
+    padding: "14px 24px",
+    borderRadius: "12px",
+    fontSize: "1rem",
+    fontWeight: "600",
+    border: "none",
+    cursor: isMinting ? "not-allowed" : "pointer",
+    marginTop: "2rem",
+    opacity: isMinting ? 0.6 : 1,
+    transition: "all 0.3s ease",
+  }}
 >
   {isMinting ? "Minting..." : "Terminé mi sesión"}
 </button>

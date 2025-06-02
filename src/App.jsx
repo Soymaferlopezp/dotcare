@@ -8,7 +8,7 @@ import ProblemSolution from './components/ProblemSolution';
 import Benefits from './components/Benefits';
 import CtaFooter from './components/CtaFooter';
 
-// Páginas internas
+// Páginas
 import Dashboard from './pages/Dashboard';
 import Respiraciones from './pages/Respiraciones';
 import Respiracion1 from './pages/Respiracion1';
@@ -39,4 +39,3 @@ function App() {
 }
 
 export default App;
-

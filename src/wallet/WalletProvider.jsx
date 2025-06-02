@@ -49,4 +49,3 @@ export function WalletProvider({ children }) {
     </WagmiProvider>
   );
 }
-

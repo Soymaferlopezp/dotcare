@@ -15,7 +15,7 @@
 
 - ✅ **Conexión con wallet** (testnet PAS – Polkadot Asset Hub)
 - 🧘‍♀️ **Sesiones de respiración guiada y meditación**
-- 🏆 **Mint de badge NFT tras completar una sesión** (1 por wallet)
+- 🏆 **Mint de badge tras completar una sesión** (1 por wallet)
 - 📊 **Dashboard personalizado**
 - 🎯 **Validación de red correcta + redirección inteligente**
 
@@ -111,14 +111,6 @@ src/
 ├── pages/                   # Vistas del sitio (Dashboard, Respiraciones)
 ├── wallet/                  # Lógica de conexión con wallet
 └── main.jsx                 # Punto de entrada principal
-🛠️ Próximos pasos
- Habit tracker NFTizado
-
- Bitácora emocional anónima en-chain
-
- Recompensas por constancia en bienestar
-
- DAO emocional de builders 💖
 
 🧑‍🤝‍🧑 Team DOTCARE
 Nombre	Rol	
