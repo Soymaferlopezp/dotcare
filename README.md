@@ -34,7 +34,7 @@
 
 ## 🌐 Demo en vivo
 
-👉 [https://dotcare.vercel.app](https://dotcare.vercel.app)
+👉 [https://dotcare-blockbears.netlify.app](https://dotcare-blockbears.netlify.app)
 
 ---
 
