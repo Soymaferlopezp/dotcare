@@ -1,95 +1,57 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Bell } from "lucide-react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [email, setEmail] = useState("");
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  return (
+    <main className="min-h-dvh px-6 py-10 bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+      <div className="mx-auto max-w-2xl space-y-6">
+        <header className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">DOTCARE</h1>
+            <p className="mt-2 text-zinc-600 dark:text-zinc-300">
+              Bienestar premium con token-gating para builders Web3.
+            </p>
+            <div className="mt-4 flex gap-2">
+              <Button asChild variant="outline"><a href="/subscribe">/subscribe</a></Button>
+              <Button asChild><a href="/premium">/premium</a></Button>
+            </div>
+          </div>
+          <ConnectButton />
+        </header>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Demo UI mínima</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex gap-2">
+              <Input
+                placeholder="tu@email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Button onClick={() => toast.success("Guardado ✅")}>Guardar</Button>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Button variant="default" onClick={() => toast("Hola 👋")}>
+                <Bell className="size-4" />
+                Toast
+              </Button>
+              <Button variant="outline">Outline</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </main>
   );
 }
