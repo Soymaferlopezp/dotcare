@@ -22,13 +22,6 @@ export const paseo = defineChain({
   // blockExplorers: { default: { name: "Explorer", url: "..." } },
 });
 
-/**
- * RainbowKit v2 + Wagmi v2:
- * - Define TUS chains en `chains: [...]`
- * - Transports mapeados por chainId
- * - WalletConnect con tu projectId (si no, NO pongas un falso)
- * - Esto ya incluye injected + WC; no uses `connectorsForWallets` aquí.
- */
 export const wagmiConfig = getDefaultConfig({
   appName: "DOTCARE",
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? "",
@@ -36,6 +29,5 @@ export const wagmiConfig = getDefaultConfig({
   transports: {
     [paseo.id]: http(RPC),
   },
-  // Opcional: desactiva `ssr` si tu setup lo requiere
   ssr: true,
 });
