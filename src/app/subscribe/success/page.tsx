@@ -1,9 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { formatCentsUSD, nextChargeText, Plan } from "@/lib/pricing";
+
+// Evita SSG/ISR en esta página (usa sólo CSR)
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 type SessionDTO = {
   id: string;
@@ -18,7 +22,7 @@ type SessionDTO = {
   expires_at: string | null;
 };
 
-export default function SubscribeSuccessPage() {
+function SuccessInner() {
   const params = useSearchParams();
   const sessionId = params.get("sessionId") || "";
   const [loading, setLoading] = useState(true);
@@ -34,13 +38,12 @@ export default function SubscribeSuccessPage() {
         return;
       }
       try {
-        const res = await fetch(`/api/checkout/${encodeURIComponent(sessionId)}`);
-        const data = (await res.json()) as unknown;
-        if (!res.ok) throw new Error((data as { error?: string })?.error || "No se pudo obtener la sesión.");
+        const res = await fetch(`/api/checkout/${encodeURIComponent(sessionId)}`, { cache: "no-store" });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || "No se pudo obtener la sesión.");
         if (!cancelled) setSession(data as SessionDTO);
-      } catch (e: unknown) {
-        const message = e instanceof Error ? e.message : "Error inesperado.";
-        if (!cancelled) setErr(message);
+      } catch (e) {
+        if (!cancelled) setErr(e instanceof Error ? e.message : "Error inesperado.");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -51,7 +54,10 @@ export default function SubscribeSuccessPage() {
 
   const planLabel = useMemo(() => (!session ? "" : session.plan === "monthly" ? "Mensual" : "Anual"), [session]);
   const baseLabel = useMemo(() => (session ? formatCentsUSD(session.base_price_cents) : ""), [session]);
-  const discountLabel = useMemo(() => (!session ? "" : session.discount_bps > 0 ? `-${(session.discount_bps / 100).toFixed(2)}%` : "$0.00"), [session]);
+  const discountLabel = useMemo(
+    () => (!session ? "" : session.discount_bps > 0 ? `-${(session.discount_bps / 100).toFixed(2)}%` : "$0.00"),
+    [session]
+  );
   const finalLabel = useMemo(() => (session ? formatCentsUSD(session.final_price_cents) : ""), [session]);
   const nextCharge = useMemo(() => (session ? nextChargeText(session.plan) : ""), [session]);
 
@@ -66,7 +72,7 @@ export default function SubscribeSuccessPage() {
           <div className="mx-auto mt-6 max-w-xl rounded-2xl border border-red-700/60 bg-red-900/20 p-4">
             <p className="text-sm text-red-300">{err}</p>
             <p className="mt-3 text-xs text-red-200/80">
-              Asegúrate de llegar a esta página tras completar el checkout: <code>/subscribe/success?sessionId=...</code>
+              Llega a esta página tras completar el checkout: <code>/subscribe/success?sessionId=...</code>
             </p>
             <div className="mt-4 text-center">
               <Link href="/subscribe" className="inline-block rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-800">
@@ -142,5 +148,20 @@ export default function SubscribeSuccessPage() {
         )}
       </section>
     </main>
+  );
+}
+
+export default function Page() {
+  // Suspense boundary correcto (el fallback ahora tiene </main>)
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-zinc-950 text-zinc-100 flex items-center justify-center">
+          <p className="text-sm text-zinc-300">Cargando…</p>
+        </main>
+      }
+    >
+      <SuccessInner />
+    </Suspense>
   );
 }
