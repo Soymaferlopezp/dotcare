@@ -5,9 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import LeftPanel from "@/components/subscribe/LeftPanel";
 import RightPanel from "@/components/subscribe/RightPanel";
 import "@/styles/checkout.css";
-import {
-  Plan, centsForPlan, applyDiscountBps, formatCentsUSD, isValidCouponFormat, nextChargeText,
-} from "@/lib/pricing";
+import { Plan, centsForPlan, applyDiscountBps, formatCentsUSD, isValidCouponFormat, nextChargeText } from "@/lib/pricing";
 import { useRouter } from "next/navigation";
 import LogoMini from "@/components/subscribe/LogoMini";
 
@@ -62,8 +60,11 @@ export default function SubscribePage() {
         if (!res.ok) throw new Error(`Session error (${res.status})`);
         const data = (await res.json()) as { sessionId: string };
         if (!cancelled && creatingRef.current === idx) persistSession(data.sessionId);
-      } catch (err) { console.error(err); }
-      finally { if (!cancelled && creatingRef.current === idx) setLoadingSession(false); }
+      } catch (err: unknown) {
+        console.error(err);
+      } finally {
+        if (!cancelled && creatingRef.current === idx) setLoadingSession(false);
+      }
     }
     createSession();
     return () => { cancelled = true; };
@@ -79,12 +80,17 @@ export default function SubscribePage() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId, code: couponCode.toUpperCase() }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Apply code failed");
+      const data = (await res.json()) as unknown;
+      if (!res.ok) throw new Error((data as { error?: string })?.error || "Apply code failed");
       const parsed = data as ApplyCodeResult;
       setDiscountBps(parsed.discount_bps);
-    } catch (err: any) { setDiscountBps(0); setApplyError(err?.message || "No se pudo aplicar el cupón."); }
-    finally { setApplyingCode(false); }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "No se pudo aplicar el cupón.";
+      setDiscountBps(0);
+      setApplyError(message);
+    } finally {
+      setApplyingCode(false);
+    }
   };
 
   const handleConfirmTransfer = async () => {
@@ -97,26 +103,26 @@ export default function SubscribePage() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Confirmación fallida");
+      const data = (await res.json()) as unknown;
+      if (!res.ok) throw new Error((data as { error?: string })?.error || "Confirmación fallida");
       router.push(`/subscribe/success?sessionId=${encodeURIComponent(sessionId)}`);
-    } catch (err: any) { setConfirmError(err?.message || "No se pudo confirmar."); }
-    finally { setConfirming(false); }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "No se pudo confirmar.";
+      setConfirmError(message);
+    } finally {
+      setConfirming(false);
+    }
   };
 
   const couponApplyDisabled = !sessionId || !couponCode || !couponValidFormat || applyingCode || loadingSession;
 
   return (
     <main id="subscribe-root" className="min-h-screen bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
-      <section
-        id="subscribe-container"
-        className="mx-auto w-full max-w-6xl px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-6"
-      >
+      <section id="subscribe-container" className="mx-auto w-full max-w-6xl px-4 py-8 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Header izquierdo: SOLO logo */}
         <div id="left-column" className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3"><LogoMini /></div>
-            {/* Eliminado el mini toggle para evitar botón duplicado */}
             <div aria-hidden className="w-8 h-8" />
           </div>
 

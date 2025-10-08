@@ -16,7 +16,6 @@ export async function POST(req: Request) {
 
     const { sessionId, code } = parse.data;
 
-    // 1) Cargar sesión
     const { data: session, error: sErr } = await supabase
       .from("checkout_sessions")
       .select("id, plan, base_price_cents, status")
@@ -31,7 +30,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Session already confirmed/locked" }, { status: 409 });
     }
 
-    // 2) Validar cupón vigente
     const { data: coupon, error: cErr } = await supabase
       .from("coupons")
       .select("id, discount_bps, active, max_uses, used, expires_at")
@@ -53,14 +51,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Code not eligible" }, { status: 400 });
     }
 
-    // 3) Calcular final
-    const base = typeof session.base_price_cents === "number"
-      ? session.base_price_cents
-      : centsForPlan(session.plan as "monthly" | "yearly");
+    const base =
+      typeof session.base_price_cents === "number"
+        ? session.base_price_cents
+        : centsForPlan(session.plan as "monthly" | "yearly");
 
     const final = applyDiscountBps(base, coupon.discount_bps);
 
-    // 4) Actualizar sesión (NO incrementamos 'used' aquí; se podría hacer al confirmar)
     const { error: uErr } = await supabase
       .from("checkout_sessions")
       .update({
@@ -83,7 +80,8 @@ export async function POST(req: Request) {
       final_price_label: formatCentsUSD(final),
       status: "code_applied",
     });
-  } catch (e: any) {
-    return NextResponse.json({ error: "Unexpected", details: e?.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: "Unexpected", details: message }, { status: 500 });
   }
 }

@@ -5,7 +5,7 @@ type Params = { params: Promise<{ id: string }> };
 
 export async function GET(_req: Request, ctx: Params) {
   try {
-    const { id } = await ctx.params; // <- importante en Next 15
+    const { id } = await ctx.params;
 
     const { data, error } = await supabase
       .from("checkout_sessions")
@@ -20,7 +20,8 @@ export async function GET(_req: Request, ctx: Params) {
     }
 
     return NextResponse.json(data);
-  } catch (e: any) {
-    return NextResponse.json({ error: "Unexpected", details: e?.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: "Unexpected", details: message }, { status: 500 });
   }
 }

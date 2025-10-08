@@ -12,7 +12,6 @@ export async function POST(req: Request) {
 
     const { sessionId } = parse.data;
 
-    // Verificar que exista y que no esté ya confirmada
     const { data: session, error: sErr } = await supabase
       .from("checkout_sessions")
       .select("id, status, paid_offchain")
@@ -40,7 +39,8 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ sessionId, status: "ready_for_chain", paid_offchain: true });
-  } catch (e: any) {
-    return NextResponse.json({ error: "Unexpected", details: e?.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: "Unexpected", details: message }, { status: 500 });
   }
 }

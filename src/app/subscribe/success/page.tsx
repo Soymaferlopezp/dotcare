@@ -35,64 +35,41 @@ export default function SubscribeSuccessPage() {
       }
       try {
         const res = await fetch(`/api/checkout/${encodeURIComponent(sessionId)}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || "No se pudo obtener la sesión.");
+        const data = (await res.json()) as unknown;
+        if (!res.ok) throw new Error((data as { error?: string })?.error || "No se pudo obtener la sesión.");
         if (!cancelled) setSession(data as SessionDTO);
-      } catch (e: any) {
-        if (!cancelled) setErr(e?.message || "Error inesperado.");
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : "Error inesperado.";
+        if (!cancelled) setErr(message);
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
     run();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [sessionId]);
 
-  const planLabel = useMemo(() => {
-    if (!session) return "";
-    return session.plan === "monthly" ? "Mensual" : "Anual";
-  }, [session]);
-
-  const baseLabel = useMemo(
-    () => (session ? formatCentsUSD(session.base_price_cents) : ""),
-    [session]
-  );
-  const discountLabel = useMemo(() => {
-    if (!session) return "";
-    return session.discount_bps > 0 ? `-${(session.discount_bps / 100).toFixed(2)}%` : "$0.00";
-  }, [session]);
-  const finalLabel = useMemo(
-    () => (session ? formatCentsUSD(session.final_price_cents) : ""),
-    [session]
-  );
-  const nextCharge = useMemo(
-    () => (session ? nextChargeText(session.plan) : ""),
-    [session]
-  );
+  const planLabel = useMemo(() => (!session ? "" : session.plan === "monthly" ? "Mensual" : "Anual"), [session]);
+  const baseLabel = useMemo(() => (session ? formatCentsUSD(session.base_price_cents) : ""), [session]);
+  const discountLabel = useMemo(() => (!session ? "" : session.discount_bps > 0 ? `-${(session.discount_bps / 100).toFixed(2)}%` : "$0.00"), [session]);
+  const finalLabel = useMemo(() => (session ? formatCentsUSD(session.final_price_cents) : ""), [session]);
+  const nextCharge = useMemo(() => (session ? nextChargeText(session.plan) : ""), [session]);
 
   return (
     <main id="subscribe-success-root" className="min-h-screen bg-zinc-950 text-zinc-100">
       <section className="mx-auto w-full max-w-3xl px-4 py-14">
         <h1 className="text-2xl font-semibold text-center">¡Gracias por tu apoyo!</h1>
 
-        {loading && (
-          <p className="mt-6 text-center text-zinc-300">Cargando detalles de tu orden…</p>
-        )}
+        {loading && <p className="mt-6 text-center text-zinc-300">Cargando detalles de tu orden…</p>}
 
         {!loading && err && (
           <div className="mx-auto mt-6 max-w-xl rounded-2xl border border-red-700/60 bg-red-900/20 p-4">
             <p className="text-sm text-red-300">{err}</p>
             <p className="mt-3 text-xs text-red-200/80">
-              Asegúrate de llegar a esta página tras completar el checkout:{" "}
-              <code>/subscribe/success?sessionId=...</code>
+              Asegúrate de llegar a esta página tras completar el checkout: <code>/subscribe/success?sessionId=...</code>
             </p>
             <div className="mt-4 text-center">
-              <Link
-                href="/subscribe"
-                className="inline-block rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-800"
-              >
+              <Link href="/subscribe" className="inline-block rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-800">
                 Volver al checkout
               </Link>
             </div>
@@ -131,12 +108,9 @@ export default function SubscribeSuccessPage() {
 
                 <div className="mt-3">
                   <p className="text-xs">
-                    Estado de la sesión:{" "}
-                    <span className="font-mono">{session.status}</span>{" "}
+                    Estado de la sesión: <span className="font-mono">{session.status}</span>{" "}
                     {session.paid_offchain && (
-                      <span className="ml-2 rounded bg-emerald-900/40 px-2 py-0.5 text-emerald-300">
-                        paid_offchain
-                      </span>
+                      <span className="ml-2 rounded bg-emerald-900/40 px-2 py-0.5 text-emerald-300">paid_offchain</span>
                     )}
                   </p>
                 </div>
@@ -153,16 +127,10 @@ export default function SubscribeSuccessPage() {
             </div>
 
             <div className="flex items-center justify-center gap-3">
-              <Link
-                href="/subscribe"
-                className="inline-block rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-800"
-              >
+              <Link href="/subscribe" className="inline-block rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-800">
                 Ver planes
               </Link>
-              <Link
-                href="/subscribe"
-                className="inline-block rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-800"
-              >
+              <Link href="/subscribe" className="inline-block rounded-lg border border-zinc-700 px-4 py-2 text-sm hover:bg-zinc-800">
                 Volver al checkout
               </Link>
             </div>

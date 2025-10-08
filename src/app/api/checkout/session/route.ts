@@ -34,7 +34,8 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ sessionId: data!.id }, { status: 201 });
-  } catch (e: any) {
-    return NextResponse.json({ error: "Unexpected", details: e?.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: "Unexpected", details: message }, { status: 500 });
   }
 }
