@@ -268,3 +268,207 @@ Footer (logo auto-swap + derechos)
 A11y review (skip link, foco visible, reduced motion, landmarks)
 
 ---
+
+# DOTCARE — Hito 2: Plataforma de Pago (Off-chain)
+
+Checkout de suscripción con UI a dos columnas, Supabase (anon), endpoints Next.js y modo claro/oscuro unificado. **Sin blockchain aún**: el botón “Transferencia realizada” marca la sesión como `ready_for_chain` (off-chain) y redirige a `/subscribe/success?sessionId=...`.
+
+---
+
+## Requisitos
+
+- Node 18+  
+- NPM  
+- Cuenta en **Supabase**  
+- Next.js 15 (App Router)  
+- Tailwind (`darkMode: "class"`)
+
+---
+
+## Instalación (Windows CMD)
+
+```cmd
+npm i
+REM variables locales
+copy .env.example .env.local
+REM dev server
+npm run dev
+Variables de entorno
+Edita .env.local:
+
+env
+Copiar código
+# Supabase (públicas para este Hito)
+SUPABASE_URL=...      # Settings → API → Project URL
+SUPABASE_ANON_KEY=... # Settings → API → anon public
+
+# Paseo / Tesorería (front)
+NEXT_PUBLIC_TREASURY_ADDRESS=0x90B3EA700173274560182CbF76ED8E6E66Ad2494
+NEXT_PUBLIC_PASEO_NAME=Paseo PassetHub
+NEXT_PUBLIC_PASEO_RPC=https://testnet-passet-hub-eth-rpc.polkadot.io
+NEXT_PUBLIC_PASEO_CHAIN_ID=420420422
+NEXT_PUBLIC_PASEO_SYMBOL=PAS
+Base de datos (Supabase)
+Crea proyecto y copia SUPABASE_URL y SUPABASE_ANON_KEY.
+
+En SQL Editor pega db\h2_schema.sql y ejecuta.
+
+(Opcional) Inserta cupón de prueba:
+
+sql
+Copiar código
+insert into public.coupons (code, type, discount_bps, max_uses, used, active, expires_at)
+values ('NERDCONF-2025','percent',2000,100,0,true, now() + interval '90 days');
+Tablas (off-chain):
+
+users
+
+coupons
+
+checkout_sessions
+
+webhooks
+
+Estados checkout_sessions.status:
+created → review (opcional) → code_applied → confirmed_offchain → ready_for_chain → (H3) onchain_success → (H3) active.
+
+RLS: políticas de desarrollo permisivas ya incluidas en el SQL. Endurecer en producción.
+
+Estructura de archivos (H2)
+csharp
+Copiar código
+src\
+  app\
+    subscribe\
+      page.tsx
+      success\
+        page.tsx
+    api\
+      checkout\
+        session\route.ts           # POST
+        apply-code\route.ts        # POST
+        [id]\route.ts              # GET
+        confirm-offchain\route.ts  # POST
+  components\
+    ThemeProvider.tsx
+    ThemeFab.tsx                   # FAB global ☀︎/☾
+    subscribe\
+      LeftPanel.tsx
+      RightPanel.tsx
+      ProductBox.tsx
+      PlanSelector.tsx
+      CouponField.tsx
+      OrderSummary.tsx
+      OrderDetailsModal.tsx
+      WalletSection.tsx
+      NetworkHelp.tsx
+      TermsCheck.tsx
+      ConfirmTransferButton.tsx
+      LogoMini.tsx
+  lib\
+    pricing.ts
+    validators.ts
+    supabase.ts
+  styles\
+    checkout.css
+public\
+  pay\treasury-qr.png
+  brand\dotcare_light.png
+  brand\dotcare_dark.png
+db\
+  h2_schema.sql
+UI / Flujo
+Ruta principal: /subscribe (maquetado 2 columnas)
+
+Izquierda (orden):
+
+Logo mini (cambia según tema).
+
+Caja de producto (copy exacto).
+
+Selector de plan: $20 / mensual | $144 / anual (nota: “Suscripción anual — Ahorra 5 meses”).
+
+Cupón (valida formato local: A-Z 0-9 -, 3–24).
+
+Resumen: Total due today + link “Ver detalles de la orden” (modal con desglose).
+
+Próximo pago (30 días mensual / 365 días anual).
+
+Derecha:
+
+Conectar Wallet (placeholder).
+
+Wallet destino (de .env), QR (public\pay\treasury-qr.png).
+
+Datos PASEO (texto + link a ChainList).
+
+Checklist de términos.
+
+Botón principal “Transferencia realizada” (marca sesión ready_for_chain y redirige a /subscribe/success?sessionId=...).
+
+Tema light/dark
+
+FAB global (☀︎/☾) en todas las páginas.
+
+ThemeProvider con next-themes (attribute="class", defaultTheme="dark").
+
+Tokens en tokens.css: :root oscuro, .light claro.
+
+Endpoints
+POST /api/checkout/session
+Crea una sesión.
+
+Body
+
+json
+Copiar código
+{ "plan": "monthly" | "yearly" }
+Res (201)
+
+json
+Copiar código
+{ "sessionId": "UUID" }
+POST /api/checkout/apply-code
+Aplica cupón a la sesión.
+
+Body
+
+json
+Copiar código
+{ "sessionId": "UUID", "code": "NERDCONF-2025" }
+Res (200)
+
+json
+Copiar código
+{
+  "sessionId":"...","base_price_cents":2000,
+  "discount_bps":2000,"final_price_cents":1600,
+  "final_price_label":"$16.00","status":"code_applied"
+}
+GET /api/checkout/:id
+Devuelve estado/valores de la sesión.
+
+Res (200)
+
+json
+Copiar código
+{
+  "id":"...","plan":"monthly",
+  "base_price_cents":2000,"discount_bps":2000,
+  "final_price_cents":1600,"code":"NERDCONF-2025",
+  "status":"code_applied","paid_offchain":false,
+  "created_at":"...","expires_at":null
+}
+POST /api/checkout/confirm-offchain
+Marca paid_offchain=true y status=ready_for_chain.
+
+Body
+
+json
+Copiar código
+{ "sessionId": "UUID" }
+Res (200)
+
+json
+Copiar código
+{ "sessionId":"...", "status":"ready_for_chain", "paid_offchain":true }

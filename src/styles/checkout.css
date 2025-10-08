@@ -1,0 +1,6 @@
+/* Estilos mínimos para la vista de checkout */
+/* Puedes mover estas utilidades a globals.css más adelante si prefieres */
+
+#subscribe-root {
+  --ring: 0 0% 100%;
+}
