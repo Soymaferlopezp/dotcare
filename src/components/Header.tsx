@@ -3,8 +3,29 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useState, useEffect } from "react";
+
+type Item = { label: string; href: string };
+const NAV: Item[] = [
+  { label: "Beneficios", href: "#beneficios" },
+  { label: "Planes", href: "#planes" },
+  { label: "Equipo", href: "#equipo" },
+];
 
 export default function Header() {
+  const [active, setActive] = useState<string>("");
+
+  // Al cargar, si hay hash en la URL, lo usamos como activo
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash) {
+      setActive(window.location.hash);
+    }
+  }, []);
+
+  const onNavClick = (href: string) => {
+    setActive(href);
+  };
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-ink/80 backdrop-blur">
       <nav
@@ -12,7 +33,7 @@ export default function Header() {
         role="navigation"
         aria-label="Principal"
       >
-        {/* Brand */}
+        {/* Brand → siempre al landing */}
         <Link href="/" className="flex items-center gap-2" aria-label="Ir al inicio">
           {/* Light theme -> versión light */}
           <Image
@@ -34,11 +55,22 @@ export default function Header() {
           />
         </Link>
 
-        {/* Links */}
-        <div className="ml-4 hidden items-center gap-4 md:flex">
-          <a href="#beneficios" className="text-sm text-muted hover:text-text" aria-label="Ir a Beneficios">Beneficios</a>
-          <a href="#planes" className="text-sm text-muted hover:text-text" aria-label="Ir a Planes">Planes</a>
-          <a href="#equipo" className="text-sm text-muted hover:text-text" aria-label="Ir a Equipo">Equipo</a>
+        {/* Nav pills */}
+        <div className="ml-4 hidden items-center gap-2 md:flex">
+          {NAV.map((item) => {
+            const isActive = active === item.href;
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                onClick={() => onNavClick(item.href)}
+                className={`nav-pill ${isActive ? "nav-pill-active" : ""}`}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </div>
 
         {/* Actions */}

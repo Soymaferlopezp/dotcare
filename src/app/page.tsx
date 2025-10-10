@@ -5,6 +5,7 @@ import ProblemSection from "../components/ProblemSection";
 import OpportunitySection from "../components/OpportunitySection";
 import BenefitsSection from "../components/BenefitsSection";
 import Testimonials from "../components/Testimonials";
+import Guides from "../components/Guides";
 import Pricing from "../components/Pricing";
 import Team from "../components/Team";
 import Footer from "../components/Footer";
@@ -20,6 +21,7 @@ export default function Page() {
         <OpportunitySection />
         <BenefitsSection />
         <Testimonials />
+        <Guides />
         <Pricing />
         <Team />
       </main>

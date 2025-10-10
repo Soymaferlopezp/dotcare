@@ -1,6 +1,6 @@
 import { copy } from "../lib/copy";
 
-const EMOJIS = ["🐻","🧠","⚙️"]; // se cicla si hay más miembros
+const EMOJIS = ["🐼","🐻","🐻‍❄️"]; 
 
 export default function Team() {
   return (
@@ -13,9 +13,14 @@ export default function Team() {
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2 md:grid-cols-3">
           {copy.team.members.map((m, i) => (
-            <article
+            <a
               key={i}
+              href={m.url}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group rounded-2xl border border-border bg-panel p-5 transition hover:-translate-y-0.5 hover:shadow-[0_0_24px_0_var(--emerald)]"
+              aria-label={`Abrir perfil de ${m.name} en X`}
+              title={`Abrir perfil de ${m.name} en X`}
             >
               <div className="flex items-center gap-4">
                 <div
@@ -30,7 +35,7 @@ export default function Team() {
                   <p className="text-sm text-muted">{m.role}</p>
                 </div>
               </div>
-            </article>
+            </a>
           ))}
         </div>
       </div>

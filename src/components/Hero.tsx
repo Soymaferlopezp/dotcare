@@ -12,18 +12,28 @@ export default function Hero() {
           <p className="mt-3 max-w-prose text-base text-muted md:text-lg">
             {copy.hero.subtitle}
           </p>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
+
+          {/* Wrapper con clase 'cta-swap' para controlar el intercambio de glow */}
+          <div className="cta-swap mt-6 flex flex-wrap items-center gap-3">
+            {/* CTA principal con glow por defecto (emerald) */}
             <Link
               href="/subscribe"
-              className="inline-flex items-center rounded-xl border border-emerald bg-emerald/15 px-5 py-2.5 text-sm font-medium text-text shadow-[0_0_32px_0_var(--emerald)] hover:brightness-110"
+              className="cta-primary inline-flex items-center rounded-xl border border-emerald bg-emerald/15 px-5 py-2.5 text-sm font-medium text-text shadow-[0_0_32px_0_var(--emerald)] transition hover:brightness-110"
             >
               {copy.hero.cta}
             </Link>
 
+            {/* DEMO — mismo borde/fondo/shine (emerald); al interactuar se lleva el glow */}
+            <Link
+              href="/premium"
+              className="demo inline-flex items-center rounded-xl border border-emerald bg-emerald/15 px-5 py-2.5 text-sm font-medium text-text transition hover:brightness-110 hover:shadow-[0_0_28px_0_var(--emerald)] focus-visible:shadow-[0_0_28px_0_var(--emerald)]"
+              title="Entrar al demo sin pago (vista en modo observador)"
+            >
+              🛸 Demo
+            </Link>
           </div>
         </div>
 
-        {/* Lado derecho: placeholder visual (se reemplazará más adelante) */}
         <div className="md:col-span-5">
           <div className="rounded-2xl border border-border bg-panel p-6 text-sm text-muted">
             <p className="font-mono">

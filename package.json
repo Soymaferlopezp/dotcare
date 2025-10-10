@@ -37,5 +37,18 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.13",
     "typescript": "^5"
-  }
+  },
+  "description": "DOTCARE — Setup base (Next.js + Tailwind + shadcn-like + Supabase + Web3 Paseo)",
+  "main": "postcss.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soymaferlopezp/dotcare.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Soymaferlopezp/dotcare/issues"
+  },
+  "homepage": "https://github.com/Soymaferlopezp/dotcare#readme"
 }

@@ -15,19 +15,17 @@ export default function Sponsors() {
           className="mt-8 grid grid-cols-2 items-center justify-items-center gap-8 sm:gap-12"
           aria-label="Patrocinadores"
         >
-          {/* NerdConf */}
           <a
-            href="#"
+            href="https://www.nerdconf.com"
             aria-label="NerdConf"
             className="group grid h-24 w-full place-items-center rounded-2xl border border-border bg-panel/60 p-4 transition hover:bg-panel"
+            target="_blank" rel="noopener noreferrer"
           >
-            {/* Light theme -> versión light */}
             <img
               src="/logos/nerdconf_light.png"
               alt="NerdConf"
               className="block h-12 dark:hidden opacity-90 transition group-hover:opacity-100"
             />
-            {/* Dark theme -> versión dark */}
             <img
               src="/logos/nerdconf_dark.png"
               alt="NerdConf"
@@ -35,19 +33,17 @@ export default function Sponsors() {
             />
           </a>
 
-          {/* Polkadot */}
           <a
-            href="#"
+            href="https://polkadot.com"
             aria-label="Polkadot"
             className="group grid h-24 w-full place-items-center rounded-2xl border border-border bg-panel/60 p-4 transition hover:bg-panel"
+            target="_blank" rel="noopener noreferrer"
           >
-            {/* Light theme -> versión light */}
             <img
               src="/logos/polkadot_light.png"
               alt="Polkadot"
               className="block h-12 dark:hidden opacity-90 transition group-hover:opacity-100"
             />
-            {/* Dark theme -> versión dark */}
             <img
               src="/logos/polkadot_dark.png"
               alt="Polkadot"

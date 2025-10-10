@@ -1,0 +1,7 @@
+S
+exit
+quit
+await s.sendTransaction({ to: s.address, value: 0n, gasLimit: 21000n })
+await s.sendTransaction({ to: s.address, value: 0n, type: 0, gasPrice: 2_000_000_000n, gasLimit: 21000n })
+await s.sendTransaction({ to: s.address, value: 0n, type: 2, maxFeePerGas: 3_000_000_000n, maxPriorityFeePerGas: 1_000_000_000n, gasLimit: 21000n })
+const [s]=await ethers.getSigners()

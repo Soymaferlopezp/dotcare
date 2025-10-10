@@ -34,7 +34,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "contracts/scripts/deploy.js"  ],
   "exclude": [
     "node_modules"
   ]

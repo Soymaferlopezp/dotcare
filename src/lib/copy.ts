@@ -63,8 +63,8 @@ export const copy = {
   },
   pricing: {
     title: "Invierte en tu mente",
-    monthly: { price: 19, label: "Mensual" },
-    yearly: { price: 180, label: "Anual (ahorra 20%)" },
+    monthly: { price: 20, label: "Mensual" },
+    yearly: { price: 144, label: "Anual (ahorra 5 meses)" },
     features: [
       "Acceso a cursos premium",
       "Guías rápidas descargables",
@@ -80,11 +80,11 @@ export const copy = {
     cta: "Unirme",
   },
   team: {
-    title: "Equipo",
+    title: "Conoce al Team Blockbears",
     members: [
-      { name: "Zula", role: "PM" },
-      { name: "Mary", role: "BizDev" },
-      { name: "Mafer", role: "Developer" },
+      { name: "Zula", role: "PM", url: "https://x.com/zulakyz" },
+      { name: "Mary", role: "BizDev", url: "https://x.com/mary_mlp8" },
+      { name: "Mafer", role: "Developer", url: "https://x.com/Soymaferlopezp" },
     ],
   },
   footer: { rights: "© DOTCARE. Todos los derechos reservados." },
