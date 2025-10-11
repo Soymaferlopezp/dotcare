@@ -1,43 +1,67 @@
 import { NextRequest, NextResponse } from "next/server";
 import { STATE, COURSES } from "@/lib/demoData";
-import type { ProgressTickInput, ProgressTickResult } from "@/lib/types";
 
 /**
- * Mock: marca una lección como completada y aumenta:
- * - streakDays (+1, tope 365) si completed=true
- * - progressPct del curso (suma proporcional por # lessons totales)
+ * Tipos locales (no dependemos de '@/lib/types')
  */
+type ProgressTickInput = {
+  courseSlug: string;
+  moduleId: string;
+  lessonId: string;
+};
+
+type ProgressTickResult = {
+  ok: true;
+  streakDays: number;
+  progressPct: number;
+};
+
+// Estado local del endpoint (vive mientras el proceso esté en memoria)
+const COMPLETED = new Set<string>(); // keys: `${courseSlug}:${moduleId}:${lessonId}`
+
 export async function POST(req: NextRequest) {
-  const body = (await req.json().catch(() => ({}))) as Partial<ProgressTickInput>;
-  const { courseSlug, moduleId, lessonId, completed } = body;
-
-  // Validación estricta para evitar indexar con undefined
-  if (typeof courseSlug !== "string" || !courseSlug.trim()) {
-    return NextResponse.json({ ok: false, error: "missing_course_slug" }, { status: 400 });
-  }
-  const slug = courseSlug.trim();
-
-  const course = COURSES.find((c) => c.slug === slug);
-  if (!course) {
-    return NextResponse.json({ ok: false, error: "course_not_found" }, { status: 404 });
+  let body: ProgressTickInput | null = null;
+  try {
+    body = (await req.json()) as ProgressTickInput;
+  } catch {
+    return NextResponse.json({ ok: false, error: "bad_json" }, { status: 400 });
   }
 
-  // progreso proporcional a #lessons del curso
-  const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
-  const step = totalLessons > 0 ? 100 / totalLessons : 0;
-
-  // Simulación: sólo suma si completed=true (no persistimos per-lesson en este mock)
-  if (completed) {
-    const current = STATE.courseProgressPct[slug] ?? 0;
-    STATE.courseProgressPct[slug] = Math.min(100, current + step);
-    STATE.streakDays = Math.min(365, STATE.streakDays + 1);
+  if (!body?.courseSlug || !body?.moduleId || !body?.lessonId) {
+    return NextResponse.json({ ok: false, error: "missing_fields" }, { status: 400 });
   }
 
-  const payload: ProgressTickResult = {
-    ok: true,
-    streakDays: STATE.streakDays,
-    courseSlug: slug,
-    progressPct: STATE.courseProgressPct[slug],
-  };
-  return NextResponse.json(payload);
+  try {
+    const course = COURSES.find((c) => c.slug === body!.courseSlug);
+    if (!course) {
+      return NextResponse.json({ ok: false, error: "course_not_found" }, { status: 404 });
+    }
+
+    // Marca completado en el set local
+    const key = `${body.courseSlug}:${body.moduleId}:${body.lessonId}`;
+    COMPLETED.add(key);
+
+    // Recalcula progreso del curso
+    const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
+    const completedForCourse = Array.from(COMPLETED).filter(
+      (k: string) => k.startsWith(`${body!.courseSlug}:`)
+    ).length;
+
+    const progressPct =
+      totalLessons > 0 ? Math.min(100, Math.round((completedForCourse / totalLessons) * 100)) : 0;
+
+    // Actualiza mock global para que otras vistas lo lean
+    STATE.courseProgressPct[body.courseSlug] = progressPct;
+    STATE.streakDays = Math.max(1, (STATE.streakDays || 0) + 1);
+
+    const result: ProgressTickResult = {
+      ok: true,
+      streakDays: STATE.streakDays,
+      progressPct,
+    };
+    return NextResponse.json(result);
+  } catch (e) {
+    console.error("[/api/progress] error", e);
+    return NextResponse.json({ ok: false, error: "server_error" }, { status: 500 });
+  }
 }
