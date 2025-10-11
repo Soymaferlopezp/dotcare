@@ -10,55 +10,55 @@ export const copy = {
     toggle: "Modo",
   },
   hero: {
-    title: "Convierte tu estrés en inversión personal",
+    title: "Canaliza tu estrés en rendimiento sostenible",
     subtitle:
-      "Bienestar premium con token-gating para builders, devs y traders Web3.",
+      "Bienestar premium con token-gating para builders, devs y entusiastas Web3.",
     cta: "Invertir en mí",
   },
   sponsors: { title: "Proof Of Nerds" },
   problem: {
-    title: "El reto de la comunidad web3",
+    title: "El desafío silencioso del ecosistema Web3",
     subtitle:
-      "Si no te haces responsable de tu salud mental, tu foco lo decidirán el FOMO y las notificaciones.",
+      "Cuando no controlas tu mente, el mercado, las notificaciones y las alertas lo hacen por ti.",
     cards: [
-      { emoji: "🔥", title: "Burnout crónico", text: "Sprints eternos, sin pausas efectivas." },
+      { emoji: "🔥", title: "Burnout crónico", text: "Construir sin pausas también rompe el sistema." },
       { emoji: "📉", title: "FOMO & ansiedad", text: "Volatilidad y ruido informativo 24/7." },
-      { emoji: "⏳", title: "Fatiga decisional", text: "Demasiadas opciones, poca claridad." },
+      { emoji: "⏳", title: "Fatiga decisional", text: "Opciones infinitas, energía finita." },
     ],
   },
   opportunity: {
     title: "Tu mejor oportunidad",
     subtitle:
-      "Haz de tu mente un activo antifrágil: entrena enfoque, reduce ansiedad y crece con método.",
+      "Entrena tu mente como un activo antifrágil: enfoque sostenido, calma intensional y mejora continua.",
     cards: [
       { title: "Únete a DOTCARE", text: "Acceso premium token-gated.", cta: "Ver Planes", href: "/subscribe" },
       { title: "Cursos y Guías", text: "Protocolos prácticos para foco y resiliencia." },
-      { title: "Aplica lo aprendido", text: "Rituales diarios, hábitos y seguimiento." },
+      { title: "Aplica lo aprendido", text: "Rutina, método y trazabilidad en un solo flujo." },
     ],
   },
   benefits: {
-    title: "Beneficios para la comunidad",
+    title: "Crecimiento individual con efecto en red",
     subtitle:
       "Cuando cuidas tu mente, todo tu stack mejora: shipping, comunicación y decisiones.",
     items: [
       "Menos burnout, más energía sostenida",
       "Enfoque profundo (deep work) real",
       "Menos FOMO, más criterio",
-      "Mejor sueño = mejor código",
+      "Mejor sueño = mejores decisiones",
       "Relación sana con la volatilidad",
-      "Rituales y sistemas repetibles",
+      "Rutinas simples. Sistemas inteligentes",
       "Comunicación clara con el equipo",
       "Métricas personales accionables",
       "Aprendizaje continuo sin ansiedad",
-      "Confianza y presencia al presentar",
+      "Comunica con claridad, presencia y propósito",
     ],
   },
   testimonials: {
     title: "Testimonios",
     items: [
-      { name: "Maigualida Perez", text: "Volví a dormir 7h y mi PR velocity subió. Literal." },
-      { name: "Rodrigo Bustamante", text: "Menos doom-scroll, más shipping. Mi ansiedad bajó." },
-      { name: "Magali Sanchez", text: "Hice mi pitch sin miedo. Y cerré el deal." },
+      { name: "Maigualida López", text: "Volví a dormir 7h y mi PR velocity subió. Literal." },
+      { name: "Facundo Taborda", text: "Menos doom-scroll, más shipping. Mi ansiedad bajó." },
+      { name: "Karen Sanchez", text: "Hice mi pitch sin miedo. Y cerré el deal." },
     ],
   },
   pricing: {
@@ -73,7 +73,7 @@ export const copy = {
       "Sesiones guiadas (audio)",
       "Plantillas de productividad",
       "Actualizaciones continuas",
-      "Soporte comunitario",
+      "Soporte y apoyo del equipo",
       "Retos y recompensas NFT",
       "Descuentos y perks",
     ],

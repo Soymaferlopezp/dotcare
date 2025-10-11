@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { copy } from "../lib/copy";
 
-const EMOJIS = ["✨","📘","🧭"]; // 3 cards → asignamos fijos
+const EMOJIS = ["🟢","📘","🧭"]; // 3 cards → asignamos fijos
 
 export default function OpportunitySection() {
   return (
@@ -32,7 +32,6 @@ export default function OpportunitySection() {
                 </div>
               </div>
 
-              {/* CTA: si viene en copy, úsalo; si no, mostramos un CTA genérico a /subscribe */}
               <div className="mt-5">
                 <Link
                   href={c.href ?? "/subscribe"}

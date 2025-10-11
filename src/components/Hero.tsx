@@ -29,7 +29,7 @@ export default function Hero() {
               className="demo inline-flex items-center rounded-xl border border-emerald bg-emerald/15 px-5 py-2.5 text-sm font-medium text-text transition hover:brightness-110 hover:shadow-[0_0_28px_0_var(--emerald)] focus-visible:shadow-[0_0_28px_0_var(--emerald)]"
               title="Entrar al demo sin pago (vista en modo observador)"
             >
-              🛸 Demo
+              💻 Demo
             </Link>
           </div>
         </div>
@@ -37,10 +37,10 @@ export default function Hero() {
         <div className="md:col-span-5">
           <div className="rounded-2xl border border-border bg-panel p-6 text-sm text-muted">
             <p className="font-mono">
-              Promesa: “Estructura mental + hábitos medibles para sostener el ritmo builder”.
+              Promesa: Mental framework + hábitos medibles para construir sin colapsar.
             </p>
             <ul className="mt-3 list-disc pl-5">
-              <li>Token-gating</li>
+              <li>Acceso por progreso, no por hype</li>
               <li>Rituales y métricas personales</li>
               <li>Deep work sin FOMO</li>
             </ul>

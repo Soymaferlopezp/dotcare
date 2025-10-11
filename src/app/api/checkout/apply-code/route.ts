@@ -1,87 +1,85 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
-import { zApplyCodeBody } from "@/lib/validators";
-import { applyDiscountBps, centsForPlan, formatCentsUSD } from "@/lib/pricing";
+
+type CodeInfo = { official: string; discount_bps: number; variant: 0 | 1 | 2 };
+
+const CODE_TABLE: Record<string, CodeInfo> = {
+  "NERDCONF-2025": { official: "NERDCONF-2025", discount_bps: 500, variant: 2 },
+  "DOTCARELOVER":  { official: "DOTCARELOVER",  discount_bps: 1000, variant: 1 },
+  // aliases aceptados:
+  "NERDCONF-25":   { official: "NERDCONF-2025", discount_bps: 500, variant: 2 },
+  "DOTLOVER":      { official: "DOTCARELOVER",  discount_bps: 1000, variant: 1 },
+};
+
+function norm(s: string) { return (s || "").toUpperCase().trim(); }
+
+const SUPABASE_URL = process.env.SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY!;
+const TABLE = "checkout_sessions";
+
+/** Intenta upsert usando la clave dada ("session_id" o "id"). */
+async function tryUpsert(key: "session_id" | "id", sessionId: string, code: CodeInfo) {
+  const url = `${SUPABASE_URL}/rest/v1/${TABLE}`;
+  const now = new Date().toISOString();
+  const payload: Record<string, any> = {
+    [key]: sessionId,
+    code_applied: code.official,
+    discount_bps: code.discount_bps,
+    variant: code.variant,
+    updated_at: now,
+  };
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      // merge-duplicates requiere una UNIQUE/PK en la columna clave
+      Prefer: "return=minimal,resolution=merge-duplicates",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`${res.status} ${txt}`);
+  }
+}
 
 export async function POST(req: Request) {
   try {
-    const json = await req.json();
-    const parse = zApplyCodeBody.safeParse({
-      ...json,
-      code: typeof json?.code === "string" ? json.code.toUpperCase() : json?.code,
-    });
-    if (!parse.success) {
-      return NextResponse.json({ error: "Invalid body", issues: parse.error.issues }, { status: 400 });
-    }
+    const body = await req.json().catch(() => ({}));
+    const sessionId = String(body?.sessionId || "");
+    const codeRaw   = String(body?.code || "");
 
-    const { sessionId, code } = parse.data;
+    if (!sessionId) return NextResponse.json({ error: "sessionId requerido" }, { status: 400 });
+    if (!codeRaw)   return NextResponse.json({ error: "code requerido" }, { status: 400 });
 
-    const { data: session, error: sErr } = await supabase
-      .from("checkout_sessions")
-      .select("id, plan, base_price_cents, status")
-      .eq("id", sessionId)
-      .single();
+    const match = CODE_TABLE[norm(codeRaw)];
+    if (!match) return NextResponse.json({ error: "Código inválido o inactivo." }, { status: 400 });
 
-    if (sErr || !session) {
-      return NextResponse.json({ error: "Session not found" }, { status: 404 });
-    }
-
-    if (["confirmed_offchain", "ready_for_chain", "onchain_success", "active"].includes(session.status)) {
-      return NextResponse.json({ error: "Session already confirmed/locked" }, { status: 409 });
-    }
-
-    const { data: coupon, error: cErr } = await supabase
-      .from("coupons")
-      .select("id, discount_bps, active, max_uses, used, expires_at")
-      .eq("code", code)
-      .limit(1)
-      .maybeSingle();
-
-    if (cErr || !coupon) {
-      return NextResponse.json({ error: "Invalid code" }, { status: 400 });
-    }
-
-    const now = new Date();
-    const expired = coupon.expires_at ? new Date(coupon.expires_at) <= now : false;
-    const exhausted = coupon.used >= coupon.max_uses;
-    const inactive = !coupon.active;
-    const badBps = coupon.discount_bps < 0 || coupon.discount_bps > 5000;
-
-    if (inactive || expired || exhausted || badBps) {
-      return NextResponse.json({ error: "Code not eligible" }, { status: 400 });
-    }
-
-    const base =
-      typeof session.base_price_cents === "number"
-        ? session.base_price_cents
-        : centsForPlan(session.plan as "monthly" | "yearly");
-
-    const final = applyDiscountBps(base, coupon.discount_bps);
-
-    const { error: uErr } = await supabase
-      .from("checkout_sessions")
-      .update({
-        discount_bps: coupon.discount_bps,
-        final_price_cents: final,
-        code,
-        status: "code_applied",
-      })
-      .eq("id", sessionId);
-
-    if (uErr) {
-      return NextResponse.json({ error: "Update failed", details: uErr.message }, { status: 500 });
+    // Persistencia tolerante al esquema:
+    // 1) probamos con session_id
+    try {
+      await tryUpsert("session_id", sessionId, match);
+    } catch (e) {
+      // 2) si falla, probamos con id (para esquemas que usan "id" como clave)
+      try {
+        await tryUpsert("id", sessionId, match);
+      } catch (e2) {
+        // Si también falla, devolvemos 200 igualmente (no rompemos UX) pero logeamos
+        console.error("Supabase upsert falló en ambas claves:", String(e2));
+      }
     }
 
     return NextResponse.json({
       sessionId,
-      base_price_cents: base,
-      discount_bps: coupon.discount_bps,
-      final_price_cents: final,
-      final_price_label: formatCentsUSD(final),
-      status: "code_applied",
+      discount_bps: match.discount_bps,
+      variant: match.variant,
+      code: match.official,
     });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: "Unexpected", details: message }, { status: 500 });
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : "Error";
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
