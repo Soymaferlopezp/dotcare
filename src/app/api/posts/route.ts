@@ -3,13 +3,13 @@ import { POSTS_SEED, USERS } from "@/lib/demoData";
 import type { Post, PostScope } from "@/lib/types";
 
 // Estado en memoria (se resetea al reiniciar el dev server)
-let POSTS_DB: Post[] = [...POSTS_SEED];
+const POSTS_DB: Post[] = [...POSTS_SEED];
 
 const SCOPES = ["novedades", "comenta", "codigo", "soporte", "feedback"] as const;
-type ScopeEnum = typeof SCOPES[number];
+type ScopeEnum = (typeof SCOPES)[number];
 
 const AUTHORS = ["zula", "mary", "mafer"] as const;
-type AuthorId = typeof AUTHORS[number];
+type AuthorId = (typeof AUTHORS)[number];
 
 function isScope(x: unknown): x is ScopeEnum {
   return typeof x === "string" && (SCOPES as readonly string[]).includes(x);

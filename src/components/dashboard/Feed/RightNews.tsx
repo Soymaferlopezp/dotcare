@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { RIGHT_NEWS } from "@/lib/demoData";
 
+
 function prettyDate(iso: string) {
   try {
     const d = new Date(iso);
@@ -38,7 +39,9 @@ export default function RightNews() {
         ))}
       </ul>
       <div className="mt-3 text-xs text-muted-foreground">
-        ¿Buscas más? Explora <a className="underline" href="/premium/cursos">Cursos & Guías</a>.
+        ¿Buscas más? Explora <Link href="/premium/cursos/" className="nav-pill" style={{ color: "var(--text)" }}>
+  Cursos & Guias →
+</Link>.
       </div>
     </aside>
   );

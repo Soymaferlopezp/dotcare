@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Card from "@/components/dashboard/Workshops/Card";
 import PastItem from "@/components/dashboard/Workshops/PastItem";
 import type { Workshop } from "@/lib/types";
+import Link from "next/link";
 
 /** Inline Filters (evita warning de props serializables en Client Entry) */
 function InlineFilters({
@@ -82,9 +83,9 @@ export default function WorkshopsPage() {
             <p className="font-medium">No hay eventos próximos…</p>
             <p className="text-sm text-muted-foreground">
               Pronto anunciaremos nuevas fechas. Mientras tanto, revisa{" "}
-              <a className="underline" href="/premium/cursos">
-                Cursos & Guías
-              </a>
+              <Link href="/premium/cursos/" className="nav-pill" style={{ color: "var(--text)" }}>
+                Cursos & Guias →
+              </Link>
               .
             </p>
           </div>

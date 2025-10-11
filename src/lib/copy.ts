@@ -56,9 +56,9 @@ export const copy = {
   testimonials: {
     title: "Testimonios",
     items: [
-      { name: "Maigualida López", text: "Volví a dormir 7h y mi PR velocity subió. Literal." },
-      { name: "Facundo Taborda", text: "Menos doom-scroll, más shipping. Mi ansiedad bajó." },
-      { name: "Karen Sanchez", text: "Hice mi pitch sin miedo. Y cerré el deal." },
+      { name: "Maigualida López", text: "Pasé de codear 14 h al día a planificar mis semanas como sprints personales. Hoy duermo mejor y entrego con más claridad." },
+      { name: "Facundo Taborda", text: "Entendí que mi startup no necesitaba más features, necesitaba más foco. Implementar las rutinas semanales cambió cómo priorizo y cómo lidero." },
+      { name: "Karen Sanchez", text: "Aprendí a desconectarme sin culpa. El Modo Avión para Builders era lo que necesitaba para equilibrar equipo, comunidad y vida real." },
     ],
   },
   pricing: {

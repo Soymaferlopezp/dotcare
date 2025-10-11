@@ -20,9 +20,11 @@ export default function ProfileCard({ p }: { p: UserProfile }) {
       <div className="flex items-start gap-5">
         <img
           src={avatar}
-          alt={p.alias}
+          alt={`${p.alias} avatar`}
           className="w-16 h-16 rounded-full object-cover"
-          onError={(e:any)=>{ e.currentTarget.src = AVATARS.default; }}
+          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+            (e.currentTarget as HTMLImageElement).src = AVATARS.default;
+          }}
         />
         <div className="flex-1">
           <div className="flex items-center gap-2 flex-wrap">

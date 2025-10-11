@@ -112,9 +112,12 @@ export default function EditForm({ initial, onSaved }: Props) {
         <div className="flex items-center gap-4">
           <img
             src={avatar || AVATARS.default}
+            alt="Avatar"
             className="w-20 h-20 rounded-full object-cover border"
             style={{ borderColor: "var(--border)" }}
-            onError={(e: any) => { e.currentTarget.src = AVATARS.default; }}
+            onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+              (e.currentTarget as HTMLImageElement).src = AVATARS.default;
+            }}
           />
           <label
             className="px-3 py-1.5 rounded-md cursor-pointer"
