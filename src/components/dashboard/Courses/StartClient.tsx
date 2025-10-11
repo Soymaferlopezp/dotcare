@@ -1,6 +1,10 @@
 "use client";
 import { useState } from "react";
-import type { Course, Module, ProgressTickResult } from "@/lib/types";
+import type { Course, Module } from "@/lib/types";
+
+/** Tipos locales para el endpoint de progreso */
+type ProgressTickInput = { courseSlug: string; moduleId: string; lessonId: string };
+type ProgressTickResult = { ok: true; streakDays: number; progressPct: number };
 
 /** ----- IndexTree (interno) ----- */
 function IndexTree({
@@ -68,12 +72,14 @@ function PlayerLayout({
     return { m, l };
   })();
 
+  // Mantener sincronizado el estado interno con prop externa
+  if (progress !== progressPct) setProgress(progressPct);
+
   async function markComplete() {
     if (!active) return;
     setCompleting(true);
     try {
       await onComplete({ moduleId: active.moduleId, lessonId: active.lessonId });
-      // El padre actualizará el porcentaje; aquí solo feedback UI
     } finally {
       setCompleting(false);
     }
@@ -129,18 +135,19 @@ function PlayerLayout({
   );
 }
 
-/** ----- StartClient (export único y serializable) ----- */
+/** ----- StartClient (export único) ----- */
 export default function StartClient({ course }: { course: Course }) {
   const [progressPct, setProgressPct] = useState(course.progressPct ?? 0);
 
   async function onComplete({ moduleId, lessonId }: { moduleId: string; lessonId: string }) {
+    const payload: ProgressTickInput = { courseSlug: course.slug, moduleId, lessonId };
     const res = await fetch("/api/progress", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ courseSlug: course.slug, moduleId, lessonId, completed: true }),
+      body: JSON.stringify(payload),
     });
     const j: ProgressTickResult = await res.json();
-    if (j?.ok && j.courseSlug === course.slug) {
+    if (j?.ok) {
       setProgressPct(j.progressPct);
     }
   }
